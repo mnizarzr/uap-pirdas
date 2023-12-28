@@ -18,9 +18,14 @@ return new class extends Migration
             $table->decimal('light')->nullable();
             $table->decimal('temperature')->nullable();
             $table->decimal('humidity')->nullable();
-            $table->boolean('relay')->nullable();
+            $table->boolean('relay_status')->nullable();
             $table->timestamp('time');
             $table->index('time');
+        });
+
+        Schema::create('settings', function (Blueprint $table) {
+            $table->string('key');
+            $table->string('value');
         });
     }
 
@@ -30,5 +35,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('sensors');
+        Schema::dropIfExists('settings');
     }
 };
