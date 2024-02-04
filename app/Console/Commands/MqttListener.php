@@ -49,21 +49,25 @@ class MqttListener extends Command
 
             $data = json_decode($message);
 
-            try {
-                SensorData::create([
-                    "rain" => $data->r,
-                    "soil" => $data->s,
-                    "light" => $data->l,
-                    "temperature" => $data->t,
-                    "humidity" => $data->h,
-                    "relay_status" => $data->ss,
-                    "time" => date("Y-m-d H:i:s", $data->ts + 7 * 3600), // add 7 hours (gmt +7)
-                ]);
-            } catch (\Throwable $th) {
-                echo $th;
-            }
 
-            NewSensorData::dispatch(SensorData::latest('id')->first());
+                try {
+                    SensorData::create([
+                        "rain" => $data->r,
+                        "soil" => $data->s,
+                        "light" => $data->l,
+                        "temperature" => $data->t,
+                        "humidity" => $data->h,
+                        "relay_status" => $data->ss,
+                        "time" => date("Y-m-d H:i:s", $data->ts + 7 * 3600), // add 7 hours (gmt +7)
+                    ]);
+                } catch (\Throwable $th) {
+                    echo 'failed';
+                }
+
+                NewSensorData::dispatch(SensorData::latest('id')->first());
+
+
+
         }, 0);
 
         $mqtt->loop(true);
